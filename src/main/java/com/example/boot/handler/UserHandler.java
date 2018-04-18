@@ -49,10 +49,29 @@ public class UserHandler {
     public Mono<ServerResponse> saveUser(ServerRequest request)
     {
         Mono<User> userMono = request.bodyToMono(User.class);
-        Mono<User> mono = userMono.flatMap(user -> userReactiveRepository.save(user));
+        Mono<User> mono = userMono.flatMap(user -> userReactiveRepository.insert(user));
         return ServerResponse.ok().body(mono, User.class);
     }
 
+    public Mono<ServerResponse> updateUser(ServerRequest req) {
+
+        return Mono
+            .zip(
+                (data) -> {
+                    User p = (User) data[0];
+                    User p2 = (User) data[1];
+                    p.setName(p2.getName());
+                    p.setEmail(p2.getEmail());
+                    return p;
+                },
+                this.userReactiveRepository.findById(req.pathVariable("id")),
+                req.bodyToMono(User.class)
+            )
+            .cast(User.class)
+            .flatMap(user -> this.userReactiveRepository.save(user))
+            .flatMap(user -> ServerResponse.noContent().build());
+
+    }
     public Mono<ServerResponse> deleteUser(ServerRequest request)
     {
        String id = request.pathVariable("id");

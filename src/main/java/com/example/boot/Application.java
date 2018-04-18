@@ -28,7 +28,7 @@ public class Application {
  * @description 模拟2条用户数据
  *
  */
-@Component
+/*@Component
 @Slf4j
 class DataInitializer implements CommandLineRunner {
 
@@ -58,4 +58,4 @@ class DataInitializer implements CommandLineRunner {
                );
     }
 
-}
+}*/

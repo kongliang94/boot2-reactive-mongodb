@@ -23,6 +23,10 @@ public class RouteConfig {
 
 	@Bean
 	public RouterFunction<ServerResponse> routes(UserHandler userHandler) {	
-		return route(GET("/users"),userHandler::getAllUsers);	
+		return route(GET("/users"),userHandler::getAllUsers)
+				.andRoute(POST("/users"), userHandler::saveUser)
+				.andRoute(GET("/users/{id}"), userHandler::getUserById)
+				.andRoute(PUT("/users/{id}"), userHandler::updateUser)
+	            .andRoute(DELETE("/users/{id}"), userHandler::deleteUser);	
 	}
 }
